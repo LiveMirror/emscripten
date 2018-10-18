@@ -628,9 +628,9 @@ def check_all_implemented(all_implemented, pre):
     if not is_already_implemented(requested, pre, all_implemented):
       # could be a js library func
       if shared.Settings.ERROR_ON_UNDEFINED_SYMBOLS:
-        exit_with_error('undefined exported function: "%s"', requested)
+        exit_with_error('undefined exported function: %s', requested)
       elif shared.Settings.WARN_ON_UNDEFINED_SYMBOLS:
-        logging.warning('undefined exported function: "%s"', requested)
+        logging.warning('undefined exported function: %s', requested)
 
 
 def is_already_implemented(requested, pre, all_implemented):

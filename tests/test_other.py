@@ -1840,6 +1840,20 @@ int f() {
 ''', output)
     self.assertNotContained('warning: library.js memcpy should not be running, it is only for testing!', output)
 
+  def test_undefined_function(self):
+    cmd = [PYTHON, EMCC, path_from_root('tests', 'hello_world.cpp')]
+    run_process(cmd)
+
+    # adding a missing symbol to EXPORTED_FUNCTIONS should cause failure
+    cmd += ['-s', "EXPORTED_FUNCTIONS=['foobar']"]
+    proc = run_process(cmd, stderr=PIPE, check=False)
+    self.assertNotEqual(proc.returncode, 0)
+    self.assertContained('undefined exported function: foobar', proc.stderr)
+
+    # setting ERROR_ON_UNDEFINED_SYMBOLS=0 suppresses error
+    cmd += ['-s', 'ERROR_ON_UNDEFINED_SYMBOLS=0']
+    proc = run_process(cmd)
+
   def test_undefined_symbols(self):
     with open('main.cpp', 'w') as f:
       f.write(r'''
