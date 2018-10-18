@@ -614,8 +614,17 @@ def get_all_implemented(forwarded_json, metadata):
   return metadata['implementedFunctions'] + list(forwarded_json['Functions']['implementedFunctions'].keys()) # XXX perf?
 
 
+# Return the list of original exports, for error reporting. It may
+# be a response file, in which case, load it
+def get_original_exported_functions():
+  ret = shared.Settings.ORIGINAL_EXPORTED_FUNCTIONS
+  if ret[0] == '@':
+    ret = json.loads(open(ret[1:]).read())
+  return ret
+
+
 def check_all_implemented(all_implemented, pre):
-  for requested in shared.Settings.ORIGINAL_EXPORTED_FUNCTIONS:
+  for requested in get_original_exported_functions():
     if not is_already_implemented(requested, pre, all_implemented):
       # could be a js library func
       if shared.Settings.ERROR_ON_UNDEFINED_SYMBOLS:
