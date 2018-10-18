@@ -618,7 +618,7 @@ def get_all_implemented(forwarded_json, metadata):
 # be a response file, in which case, load it
 def get_original_exported_functions():
   ret = shared.Settings.ORIGINAL_EXPORTED_FUNCTIONS
-  if ret[0] == '@':
+  if ret and ret[0] == '@':
     ret = json.loads(open(ret[1:]).read())
   return ret
 
